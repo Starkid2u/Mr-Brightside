@@ -11,11 +11,11 @@ with open("tokenfile", "r") as tokenfile:
     token=tokenfile.read()
 
 async def attachments_to_files(attached,spoiler=False):
-	filelist = []
-	for i in attached:
-		file = await i.to_file()
-		filelist.insert(len(filelist),file)
-	return filelist
+    filelist = []
+    for i in attached:
+        file = await i.to_file()
+        filelist.insert(len(filelist),file)
+    return filelist
 
 my_id = 312292633978339329
 client = discord.Client()
@@ -24,6 +24,9 @@ client = discord.Client()
 async def on_ready():
     print('hello world')
 
+ragecooldown = 0
+raged_at = 0
+enterrage = 0
 message_counter = 0
 @client.event
 async def on_message(message):
@@ -48,34 +51,87 @@ async def on_message(message):
         await message.channel.send("gara")
         print (f'sending gara to {message.channel.name} in {message.guild.name}')
         message_counter = 0
-    if not (message.author.id == my_id):
-        return
 
     if message.author == client.user:
         return
 
+    maxhealth = discord.utils.get(message.guild.roles, id = 714534974916919349)
+    health9 = discord.utils.get(message.guild.roles, id = 714535185273847871)
+    health8 = discord.utils.get(message.guild.roles, id = 714535298729640047)
+    health7 = discord.utils.get(message.guild.roles, id = 714535324759621712)
+    health6 = discord.utils.get(message.guild.roles, id = 714535348046266449)
+    health5 = discord.utils.get(message.guild.roles, id = 714535379675644054)
+    health4 = discord.utils.get(message.guild.roles, id = 714535405843775518)
+    health3 = discord.utils.get(message.guild.roles, id = 714535436143558788)
+    health2 = discord.utils.get(message.guild.roles, id = 714535460860330066)
+    health1 = discord.utils.get(message.guild.roles, id = 714535481928319016)
     visitor = discord.utils.get(message.guild.roles, id = 737149499364999179)
     dead = discord.utils.get(message.guild.roles, id = 714535509279637525)
     dead_visitor = discord.utils.get(message.guild.roles, id = 747460046333673573)
+    enraged = discord.utils.get(message.guild.roles, id = 749824364618186844)
+    enraged_victim = discord.utils.get(message.guild.roles, id = 749824617648226326)
 
     if message.content.startswith('brightside attack'):
+        if message.author.id != my_id:
+            return
         await message.channel.send('gararararararara')
         print(f'attacking {message.mentions[0]}')
-
-    if message.content.startswith('Mr. Brightside'):
-        await message.channel.send('gara!')
-
-    if message.content.startswith('brightside retreat'):
-        await message.channel.send('gara...')
+        if (enraged in message.author.roles and enraged_victim in message.mentions[0].roles):
+            await asyncio.sleep(0.5)
+            if (maxhealth in message.mentions[0].roles):
+                await message.mentions[0].remove_roles(maxhealth,reason="damaged")
+                await message.mentions[0].add_roles(health9,reason="damaged")
+                print(f"{message.author.name} hit {message.mentions[0].name} with a stand and brought them down to 9 health")
+            elif (health9 in message.mentions[0].roles):
+                await message.mentions[0].remove_roles(health9,reason="damaged")
+                await message.mentions[0].add_roles(health8,reason="damaged")
+                print(f"{message.author.name} hit {message.mentions[0].name} with a stand and brought them down to 8 health")
+            elif (health8 in message.mentions[0].roles):
+                await message.mentions[0].remove_roles(health8,reason="damaged")
+                await message.mentions[0].add_roles(health7,reason="damaged")
+                print(f"{message.author.name} hit {message.mentions[0].name} with a stand and brought them down to 7 health")
+            elif (health7 in message.mentions[0].roles):
+                await message.mentions[0].remove_roles(health7,reason="damaged")
+                await message.mentions[0].add_roles(health6,reason="damaged")
+                print(f"{message.author.name} hit {message.mentions[0].name} with a stand and brought them down to 6 health")
+            elif (health6 in message.mentions[0].roles):
+                await message.mentions[0].remove_roles(health6,reason="damaged")
+                await message.mentions[0].add_roles(health5,reason="damaged")
+                print(f"{message.author.name} hit {message.mentions[0].name} with a stand and brought them down to 5 health")
+            elif (health5 in message.mentions[0].roles):
+                await message.mentions[0].remove_roles(health5,reason="damaged")
+                await message.mentions[0].add_roles(health4,reason="damaged")
+                print(f"{message.author.name} hit {message.mentions[0].name} with a stand and brought them down to 4 health")
+            elif (health4 in message.mentions[0].roles):
+                await message.mentions[0].remove_roles(health4,reason="damaged")
+                await message.mentions[0].add_roles(health3,reason="damaged")
+                print(f"{message.author.name} hit {message.mentions[0].name} with a stand and brought them down to 3 health")
+            elif (health3 in message.mentions[0].roles):
+                await message.mentions[0].remove_roles(health3,reason="damaged")
+                await message.mentions[0].add_roles(health2,reason="damaged")
+                print(f"{message.author.name} hit {message.mentions[0].name} with a stand and brought them down to 2 health")
+            elif (health2 in message.mentions[0].roles):
+                await message.mentions[0].remove_roles(health2,reason="damaged")
+                await message.mentions[0].add_roles(health1,reason="damaged")
+                print(f"{message.author.name} hit {message.mentions[0].name} with a stand and brought them down to 1 health")
+            elif (health1 in message.mentions[0].roles):
+                await message.mentions[0].remove_roles(health1,reason="killed")
+                await message.mentions[0].add_roles(dead,reason="killed")
+                print(f"{message.author.name} killed {message.mentions[0].name} with a stand")
 
     if message.content.startswith('?echo'):
+        if message.author.id != my_id:
+            return
         images = await attachments_to_files(message.attachments,True)
         await message.delete()
         await message.channel.send(message.content[5:],files=images)
-        messag0e_counter -= 1
-        print(f'repeating {message.content[5:]}')
-    
+        message_counter -= 1
+        print(f'repeating{message.content[5:]}')
+
+    #otherworldly visitor code 
     if message.content.startswith('brightside visit'):
+        if message.author.id != my_id:
+            return
         if not dead in message.author.roles:
             await message.author.add_roles(visitor,reason="crossed over to dead realm")
             print('crossing over to dead realm')
@@ -86,9 +142,41 @@ async def on_message(message):
             print('crossing over to living realm')
             await asyncio.sleep(30)
         await unvist()
-
     if message.content.startswith('brightside unvisit'):
+        if message.author.id != my_id:
+            return
         await unvist()
+
+    #blindrage code
+    global ragecooldown
+    global raged_at
+    global enterrage
+    if ("<@!312292633978339329>" in message.content):
+        if ragecooldown == 1:
+            return
+        enterrage = 1
+        raged_at = message.author
+        await asyncio.sleep(120)
+        raged_at = 0
+        enterrage = 0
+    if message.content.startswith("enter rage"):
+        if message.author.id != my_id:
+            return
+        await message.delete()
+        if ragecooldown == 1:
+            return
+        if enterrage == 1:
+            enterrage = 0
+            await raged_at.add_roles(enraged_victim, reason="enraged")
+            await message.author.add_roles(enraged, reason="enraged")
+            await asyncio.sleep(30)
+            await raged_at.remove_roles(enraged_victim, reason="unenraged")
+            await message.author.remove_roles(enraged, reason="unenraged")
+            raged_at = 0
+            ragecooldown = 1
+            await asyncio.sleep(5*60)
+            ragecooldown = 0
+
 
 
 client.run(token)
