@@ -17,7 +17,7 @@ async def attachments_to_files(attached,spoiler=False):
         filelist.insert(len(filelist),file)
     return filelist
 
-my_id = 312292633978339329
+my_id = 525495267537977344
 client = discord.Client()
 
 @client.event
@@ -41,17 +41,6 @@ async def on_message(message):
 
     if message.channel.category.id == 736788095667666985:
         return
-    if message.author.bot:
-        return
-    global message_counter
-    if message.guild.id == 710865754391838762:
-        message_counter -= 1
-    message_counter += 1
-    if message_counter == 10:
-        await message.channel.send("gara")
-        print (f'sending gara to {message.channel.name} in {message.guild.name}')
-        message_counter = 0
-
     if message.author == client.user:
         return
 
@@ -70,6 +59,10 @@ async def on_message(message):
     dead_visitor = discord.utils.get(message.guild.roles, id = 747460046333673573)
     enraged = discord.utils.get(message.guild.roles, id = 749824364618186844)
     enraged_victim = discord.utils.get(message.guild.roles, id = 749824617648226326)
+
+    #linking status
+    standowner = discord.utils.get(message.guild.members, id = my_id)
+    await client.change_presence(status=standowner.status)
 
     if message.content.startswith('brightside attack'):
         if message.author.id != my_id:
@@ -151,7 +144,7 @@ async def on_message(message):
     global ragecooldown
     global raged_at
     global enterrage
-    if ("<@!312292633978339329>" in message.content):
+    if (f"<@!{my_id}>" in message.content):
         if ragecooldown == 1:
             return
         enterrage = 1
@@ -177,6 +170,19 @@ async def on_message(message):
             await asyncio.sleep(5*60)
             ragecooldown = 0
 
+@client.event
+async def on_invite_create(message):
+    print("aaa")
+    while True:
+        print(standowner.status)
+        if standowner.status == discord.Status.online:
+            await client.change_presence(status=discord.Status.online)
+        if standowner.status == discord.Status.offline:
+            await client.change_presence(status=discord.Status.offline)
+        if standowner.status == discord.Status.idle:
+            await client.change_presence(status=discord.Status.idle)
+        if standowner.status == discord.Status.dnd:
+            await client.change_presence(status=discord.Status.dnd)
 
 
 client.run(token)
