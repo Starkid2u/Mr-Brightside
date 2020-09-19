@@ -5,7 +5,6 @@ import discord
 from discord.ext.commands import bot
 from discord.ext import commands
 import asyncio
-global message_counter
 
 with open("tokenfile", "r") as tokenfile:
     token=tokenfile.read()
@@ -27,9 +26,16 @@ async def on_ready():
 ragecooldown = 0
 raged_at = 0
 enterrage = 0
-message_counter = 0
 @client.event
 async def on_message(message):
+    # linking status
+    standowner = discord.utils.get(message.guild.members, id = my_id)
+    try:
+        if standowner.activity.name == "Spotify":
+            await client.change_presence(status=standowner.status, activity=discord.Activity(name=standowner.activity.name, type=discord.ActivityType.listening))
+    except AttributeError:
+        await client.change_presence(status=standowner.status, activity=standowner.activity)
+
     async def unvist():
         if not (visitor in message.author.roles or dead_visitor in message.author.roles):
             return
@@ -38,7 +44,7 @@ async def on_message(message):
             await message.author.remove_roles(dead_visitor,reason="leaving")
             await message.author.add_roles(dead,reason="leaving")
         print('leaving')
-
+        
     if message.channel.category.id == 736788095667666985:
         return
     if message.author == client.user:
@@ -59,10 +65,6 @@ async def on_message(message):
     dead_visitor = discord.utils.get(message.guild.roles, id = 747460046333673573)
     enraged = discord.utils.get(message.guild.roles, id = 749824364618186844)
     enraged_victim = discord.utils.get(message.guild.roles, id = 749824617648226326)
-
-    #linking status
-    standowner = discord.utils.get(message.guild.members, id = my_id)
-    await client.change_presence(status=standowner.status)
 
     if message.content.startswith('brightside attack'):
         if message.author.id != my_id:
@@ -118,7 +120,6 @@ async def on_message(message):
         images = await attachments_to_files(message.attachments,True)
         await message.delete()
         await message.channel.send(message.content[5:],files=images)
-        message_counter -= 1
         print(f'repeating{message.content[5:]}')
 
     #otherworldly visitor code 
@@ -170,19 +171,15 @@ async def on_message(message):
             await asyncio.sleep(5*60)
             ragecooldown = 0
 
+    
 @client.event
-async def on_invite_create(message):
-    print("aaa")
-    while True:
-        print(standowner.status)
-        if standowner.status == discord.Status.online:
-            await client.change_presence(status=discord.Status.online)
-        if standowner.status == discord.Status.offline:
-            await client.change_presence(status=discord.Status.offline)
-        if standowner.status == discord.Status.idle:
-            await client.change_presence(status=discord.Status.idle)
-        if standowner.status == discord.Status.dnd:
-            await client.change_presence(status=discord.Status.dnd)
+async def on_member_update(before, after):
+    if after.id == my_id:
+        try:
+            if after.activity.name == "Spotify":
+                await client.change_presence(status=after.status, activity=discord.Activity(name=after.activity.name, type=discord.ActivityType.listening))
+        except AttributeError:
+            await client.change_presence(status=after.status, activity=after.activity)
 
-
+            
 client.run(token)
