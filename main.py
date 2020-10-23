@@ -6,6 +6,8 @@ from discord.ext.commands import bot
 from discord.ext import commands
 import asyncio
 
+intents = discord.Intents.all()
+
 with open("tokenfile", "r") as tokenfile:
     token=tokenfile.read()
 
@@ -16,8 +18,8 @@ async def attachments_to_files(attached,spoiler=False):
         filelist.insert(len(filelist),file)
     return filelist
 
-my_id = 525495267537977344
-client = discord.Client()
+my_id = 312292633978339329
+client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
@@ -28,14 +30,16 @@ raged_at = 0
 enterrage = 0
 @client.event
 async def on_message(message):
+    
     # linking status
-    standowner = discord.utils.get(message.guild.members, id = my_id)
+    standowner = discord.utils.get(message.guild.members, id=312292633978339329)
     try:
         if standowner.activity.name == "Spotify":
             await client.change_presence(status=standowner.status, activity=discord.Activity(name=standowner.activity.name, type=discord.ActivityType.listening))
     except AttributeError:
         await client.change_presence(status=standowner.status, activity=standowner.activity)
 
+        
     async def unvist():
         if not (visitor in message.author.roles or dead_visitor in message.author.roles):
             return
